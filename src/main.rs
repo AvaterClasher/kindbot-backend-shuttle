@@ -63,7 +63,7 @@ impl Fairing for CORS {
 // POST Function to handle the chat request
 async fn make_gemini_request(prompt: &str) -> Result<String, reqwest::Error> {
     
-    let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCuncAKdFNwtpHkanWvujVCWJdklT9r-Tg";
+    let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=";
 
     let client = Client::new();
 
@@ -99,7 +99,7 @@ async fn make_gemini_request(prompt: &str) -> Result<String, reqwest::Error> {
         }
     }
 
-    Ok("Error processing request".to_string())
+    Ok("Error Processing request".to_string())
 }
 
 // Rocket handler for POST requests to the /chat endpoint
