@@ -63,7 +63,7 @@ impl Fairing for CORS {
 // POST Function to handle the chat request
 async fn make_gemini_request(prompt: &str) -> Result<String, reqwest::Error> {
     
-    let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=";
+    let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCuncAKdFNwtpHkanWvujVCWJdklT9r-Tg";
 
     let client = Client::new();
 
@@ -93,11 +93,15 @@ async fn make_gemini_request(prompt: &str) -> Result<String, reqwest::Error> {
         if let Some(candidate) = candidates[0].get("content") {
             if let Some(parts) = candidate.get("parts") {
                 if let Some(text) = parts[0].get("text") {
+                    println!("Extracted text: {}", text.as_str().unwrap().to_string());
                     return Ok(text.as_str().unwrap().to_string());
                 }
             }
         }
     }
+
+    println!("Sending POST request to: {}", endpoint);
+    println!("Request body: {}", json);
 
     Ok("Error Processing request".to_string())
 }
@@ -123,9 +127,14 @@ fn options() -> Status {
     Status::Ok
 }
 
+#[get("/")]
+fn index() -> &'static str {
+    "Hello, world!"
+}
+
 #[shuttle_runtime::main]
 async fn main() -> shuttle_rocket::ShuttleRocket {
-    let rocket = rocket::build().mount("/", routes![chat,options]).attach(CORS);
+    let rocket = rocket::build().mount("/", routes![chat,options,index]).attach(CORS);
 
     Ok(rocket.into())
 }
